@@ -1,6 +1,16 @@
 # real_panda_moveit_control
 
-This repository contains a launchfile example on how to control the physical Panda robot using moveit.
+This repository contains a simple example launch file for controlling the physical Panda robot using Moveit. It can be used to check whether the realtime kernel was setup correctly ([see the panda documentation](https://frankaemika.github.io/docs/installation_linux.html)).
+ 
+## Clone instructions
+
+To clone the respository use the following command:
+
+```bash
+mkdir real_catkin_ws
+cd real_catkin_ws
+git clone --recurse-submodules https://github.com/rickstaa/real_panda_moveit_control.git src
+```
 
 ## Build instructions
 
