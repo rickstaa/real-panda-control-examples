@@ -13,7 +13,7 @@ rosdep install --from-paths src --ignore-src --rosdistro melodic -y
 The catkin package can be build by executing one of the following commands:
 
 ```bash
-catkin build -j4 -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+catkin build -j4 -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=~/libfranka/build
 ```
 
 ## Launch instructions
