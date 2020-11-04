@@ -1,4 +1,4 @@
-# real_panda_moveit_control
+# Real panda moveit control example
 
 This repository contains a simple example launch file for controlling the physical Panda robot using Moveit. It can be used to check whether the realtime kernel was setup correctly ([see the panda documentation](https://frankaemika.github.io/docs/installation_linux.html)).
  
