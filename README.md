@@ -1,6 +1,6 @@
 # Real panda control examples
 
-This repository contains a simple example launch file for controlling the physical Panda robot using Moveit. It can be used to check whether the realtime kernel was setup correctly ([see the panda documentation](https://frankaemika.github.io/docs/installation_linux.html)).
+This repository contains several examples for controlling the real panda robot. It was created as a supliment to the official[panda documentation](https://frankaemika.github.io/docs/installation_linux.html). Further it serves as a storage place for several problems I encountered while working with the panda robot (see the [discussions section](https://github.com/rickstaa/real-panda-control-examples/discussions)).
  
 ## Clone instructions
 
@@ -26,9 +26,13 @@ The catkin package can be build by executing one of the following commands:
 catkin build -j4 -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=~/libfranka/build
 ```
 
-## Launch instructions
+## Franka ros examples
 
-After building the catkin package and sourcing the `devel/setup.bash` file. You can launch the example using the following command:
+Please see [this discussion post](https://github.com/rickstaa/real-panda-control-examples/discussions/4) that explains how to run the example launch files provided by Emika Franka.
+
+## Moveit example launch instructions
+
+To test out Moveit control, after you build and sourced the catkin workspace, you can you can launch the example using the following command:
 
 ```bash
 roslaunch real_panda_moveit_control real_panda_moveit_control.launch
