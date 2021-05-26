@@ -21,10 +21,11 @@
     <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
     <include file="$(find panda_moveit_config)/launch/move_group.launch">
         <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="false"/> <!-- Disable fake execution -->
+        <arg name="fake_execution" value="false"/>
+        <!-- Disable fake execution -->
         <arg name="info" value="true"/>
         <arg name="debug" value="$(arg debug)"/>
-        <arg name="pipeline" value="$(arg pipeline)"  />
+        <arg name="pipeline" value="$(arg pipeline)" />
     </include>
 
     <!-- Run Rviz -->
@@ -34,10 +35,11 @@
     </include>
 
     <!-- Load franka controller -->
-    <!-- <include file="$(find franka_control)/launch/franka_control.launch" if="$(eval arg('real') and not arg('external_franka_control'))"> -->
     <include file="$(find franka_control)/launch/franka_control.launch">
         <arg name="robot_ip" value="$(arg robot_ip)"/>
         <arg name="load_gripper" value="$(arg load_gripper)"/>
-        <arg name="load_robot_description" default="false" /> <!--Make sure the robot discription is not loaded a second time.-->
+        <!--NOTE: Make sure the robot discription is not loaded a second time.-->
+        <arg name="load_robot_description" default="false" />
     </include>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
 </launch>
