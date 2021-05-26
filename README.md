@@ -35,7 +35,7 @@ Please see [this discussion post](https://github.com/rickstaa/real-panda-control
 
 ## Moveit example launch instructions
 
-To test out Moveit control, after you build and sourced the catkin workspace, you can you can launch the example included in the `panda_moveit_config` using the following command:
+To test out Moveit control, after you build and sourced the catkin workspace, you can launch the example included in the `panda_moveit_config` using the following command:
 
 ```bash
 roslaunch panda_moveit_config panda_control_moveit_rviz.launch load_gripper:=true robot_ip:=172.16.0.2
