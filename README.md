@@ -1,6 +1,6 @@
 # Real panda control examples
 
-This repository contains several examples for controlling the real panda robot. It was created as a supliment to the official[panda documentation](https://frankaemika.github.io/docs/installation_linux.html). Further it serves as a storage place for several problems I encountered while working with the panda robot (see the [discussions section](https://github.com/rickstaa/real-panda-control-examples/discussions)).
+This repository contains several examples for controlling the real panda robot. It was created as a supliment to the official [panda documentation](https://frankaemika.github.io/docs/installation_linux.html). Further it serves as a storage place for several problems I encountered while working with the panda robot (see the [discussions section](https://github.com/rickstaa/real-panda-control-examples/discussions)).
  
 ## Clone instructions
 
