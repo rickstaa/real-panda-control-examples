@@ -1,0 +1,6 @@
+#!/bin/bash
+# Small script used to connect to the roscore running on the workstation
+export ROS_MASTER_URI=http://172.16.0.1:11311
+export ROS_HOSTNAME=$(hostname)
+echo "ROS_MASTER_URI=$ROS_MASTER_URI"
+echo "ROS_HOSTNAME=$ROS_HOSTNAME"

@@ -1,45 +1,37 @@
 <!-- Script to test the robot control
 -->
 <launch>
-
     <!--Script parameters-->
     <arg name="real" default="true"/>
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
-    <arg name="debug" default="false"/>
-    <arg name="pipeline" default="ompl" />
-    <arg name ="rviz_tutorial" default="false"/>
+    <!--    Wether the franka_control node should run on this pc-->
+    <arg name="load_franka_control_node" default="true"/>
 
-    <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+    <!--If needed, broadcast static tf for robot root-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
+
+    <!--Load franka controller-->
+    <group if="$(arg load_franka_control_node)">
+        <include file="$(find franka_control)/launch/franka_control.launch">
+            <arg name="robot_ip" value="$(arg robot_ip)"/>
+            <arg name="load_gripper" value="$(arg load_gripper)"/>
+        </include>
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
+    </group>
+
+    <!--Load the URDF, SRDF and other .yaml configuration files on the param server-->
     <include file="$(find panda_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
     </include>
 
-    <!-- If needed, broadcast static tf for robot root -->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
-
-    <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
+    <!--Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default)-->
     <include file="$(find panda_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="false"/>
-        <!-- Disable fake execution -->
-        <arg name="info" value="true"/>
-        <arg name="debug" value="$(arg debug)"/>
-        <arg name="pipeline" value="$(arg pipeline)" />
+        <arg name="load_gripper" value="$(arg load_gripper)" />
     </include>
 
-    <!-- Run Rviz -->
+    <!--Run Rviz-->
     <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="rviz_tutorial" value="$(arg rviz_tutorial)"/>
-        <arg name="debug" value="$(arg debug)"/>
+        <arg name="rviz_config" value="$(find panda_moveit_config)/launch/moveit.rviz"/>
     </include>
-
-    <!-- Load franka controller -->
-    <include file="$(find franka_control)/launch/franka_control.launch">
-        <arg name="robot_ip" value="$(arg robot_ip)"/>
-        <arg name="load_gripper" value="$(arg load_gripper)"/>
-        <!--NOTE: Make sure the robot discription is not loaded a second time.-->
-        <arg name="load_robot_description" default="false" />
-    </include>
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
 </launch>
