@@ -1,6 +1,8 @@
 #!/bin/bash
 # Small script used to disconnect from the roscore running on the workstation
 export ROS_MASTER_URI=http://localhost:11311
-export ROS_HOSTNAME=localhost
+# export ROS_HOSTNAME=localhost  # Use if the hostname is resolvable on the network
+export ROS_IP=localhost # Use if the hostname can not be resolved on the network
 echo "ROS_MASTER_URI=$ROS_MASTER_URI"
 echo "ROS_HOSTNAME=$ROS_HOSTNAME"
+echo "ROS_IP=$ROS_IP"
