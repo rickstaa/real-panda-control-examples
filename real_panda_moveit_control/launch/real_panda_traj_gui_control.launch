@@ -2,7 +2,6 @@
 -->
 <launch>
     <!--Script parameters-->
-    <arg name="real" default="true"/>
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
     <!--    Wether the franka_control node should run on this pc-->
@@ -19,6 +18,7 @@
         </include>
     </group>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
+    <!-- <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen" /> -->
 
     <!--Load the URDF, SRDF and other .yaml configuration files on the param server-->
     <include file="$(find panda_moveit_config)/launch/planning_context.launch">
