@@ -1,0 +1,12 @@
+## Bash aliases ##
+
+# Default aliases #
+alias rsource='. /opt/ros/"$ROS_DISTRO"/setup.bash'
+alias rossu='. ./devel/setup.bash'
+alias sudo=''
+
+#_CONTAINER_ALIASES
+# Source user aliases #
+if [ -f ~/.singularity_bash_aliases ]; then
+    source ~/.singularity_bash_aliases
+fi

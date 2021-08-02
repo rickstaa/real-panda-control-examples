@@ -1,10 +1,6 @@
 #!/bin/bash
 # Small script used to connect to the roscore running on the workstation
-# Input the ip where the ros core is running
-master_ip=${1:-172.16.0.1}
-echo $master_ip
-# Create required environmental variables
-export ROS_MASTER_URI=http://172.16.0.1:11311
+export ROS_MASTER_URI=http://192.168.131.1:11311
 # export ROS_HOSTNAME=$(hostname) # Use if the hostname is resolvable on the network
 machine_ip=(`hostname -I`)
 export ROS_IP=${machine_ip[1]} # Use if the hostname can not be resolved on the network

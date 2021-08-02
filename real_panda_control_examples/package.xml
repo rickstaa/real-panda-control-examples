@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>real_panda_moveit_control</name>
+  <name>real_panda_control_examples</name>
   <version>0.0.0</version>
-  <description>The real_panda_moveit_control package</description>
+  <description>The real_panda_control_examples package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/real_panda_moveit_control</url> -->
+  <!-- <url type="website">http://wiki.ros.org/real_panda_control_examples</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -59,6 +59,7 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>ros_controllers</exec_depend>
   <exec_depend>rqt_joint_trajectory_controller</exec_depend>
 
 

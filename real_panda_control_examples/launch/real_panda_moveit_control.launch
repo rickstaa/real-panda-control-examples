@@ -18,7 +18,6 @@
         </include>
     </group>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
-    <!-- <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen" /> -->
 
     <!--Load the URDF, SRDF and other .yaml configuration files on the param server-->
     <include file="$(find panda_moveit_config)/launch/planning_context.launch">
@@ -32,6 +31,6 @@
 
     <!--Run Rviz-->
     <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="rviz_config" value="$(find panda_moveit_config)/launch/moveit.rviz"/>
+        <arg name="rviz_config" value="$(find real_panda_control_examples)/cfg/moveit.rviz"/>
     </include>
 </launch>
