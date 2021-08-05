@@ -5,7 +5,7 @@
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
     <!--    Wether the franka_control node should run on this pc-->
-    <arg name="load_franka_control_node" default="true"/>
+    <arg name="load_franka_control_node" default="false"/>
 
     <!--If needed, broadcast static tf for robot root-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
