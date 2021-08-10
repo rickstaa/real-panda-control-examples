@@ -42,14 +42,51 @@ From: osrf/ros:kinetic-desktop-full
     # NOTE: Needed because of a catkin-tools bug https://github.com/catkin/catkin_tools/issues/594)
     apt install -q -y python-osrf-pycommon
 
+    # Install libfranka from source
+    # NOTE: Uncomment if you want to install from source
+    apt update
+    apt install -q -y \
+       cmake \
+       libpoco-dev \
+       libeigen3-dev
+    bash -c "cd / \
+       && apt remove -y \"*libfranka*\" \
+       && git clone --recursive https://github.com/frankaemika/libfranka.git \
+       && cd libfranka \
+       && mkdir build \
+       && cd build \
+       && cmake -DCMAKE_BUILD_TYPE=Release .. \
+       && cmake --build ."
+
+    # Install libfranka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    # apt install -y ros-kinetic-libfranka
+
+    # Create the catkin workspace
+    mkdir -p /panda_ws/src; cd /panda_ws/src
+
+    # Install ros_franka from the repository
+    # NOTE: Uncomment if you want to install franka_ros from the repository
+    git clone --recursive https://github.com/frankaemika/franka_ros franka_ros
+    cd franka_ros; git checkout kinetic-devel; cd ../..
+    rosdep install --from-paths src --ignore-src --rosdistro kinetic -y --skip-keys libfranka
+    # . /opt/ros/kinetic/setup.sh; catkin_make -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+    . /opt/ros/kinetic/setup.sh; catkin build -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+
+    # Install ros_franka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    # apt install -y ros-kinetic-franka-ros
+
     # Install extra ROS packages
-    apt install -y ros-kinetic-ros-controllers
+    apt install -y \
+        ros-kinetic-ros-controllers \
+        ros-kinetic-moveit
 
     # Add container resources to the container
     bash -c "cd / \
         && git clone https://github.com/rickstaa/COR-robot-lab-reference.git \
         && cp ./COR-robot-lab-reference/containers/singularity/resources/.singularity_bashrc /.singularity_bashrc \
-        && cp ./COR-robot-lab-reference/containers/singularity/resources/welcome_msgs/.ros-noetic.txt /.welcome_msg \
+        && cp ./COR-robot-lab-reference/containers/singularity/resources/welcome_msgs/.ros-kinetic.txt /.welcome_msg \
         && cp ./COR-robot-lab-reference/containers/singularity/resources/bash_aliases/.singularity_bash_aliases /.singularity_bash_aliases \
         && rm -rf /COR-robot-lab-reference"
 %runscript

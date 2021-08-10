@@ -10,7 +10,7 @@
     <!--If needed, broadcast static tf for robot root-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
 
-    <!--Load franka controller-->
+    <!--Load franka controllers and trajectory control GUI-->
     <group if="$(arg load_franka_control_node)">
         <include file="$(find franka_control)/launch/franka_control.launch">
             <arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -20,18 +20,8 @@
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
     <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen" />
 
-    <!--Load the URDF, SRDF and other .yaml configuration files on the param server-->
-    <include file="$(find panda_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
-    </include>
-
-    <!--Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default)-->
-    <include file="$(find panda_moveit_config)/launch/move_group.launch">
-        <arg name="load_gripper" value="$(arg load_gripper)" />
-    </include>
-
     <!--Run Rviz-->
     <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="rviz_config" value="$(find real_panda_control_examples)/cfg/moveit.rviz"/>
+        <arg name="rviz_config" value="$(find real_panda_control_examples)/cfg/traj_control.rviz"/>
     </include>
 </launch>

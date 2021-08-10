@@ -1,10 +1,12 @@
 #!/bin/bash
 # Small script used to connect to the roscore running on the workstation
-export ROS_MASTER_URI=http://172.16.0.1:11311
+export ROBOT_IP="172.16.0.2"
+export WORKSTATION_IP="172.16.0.1"
+export ROS_MASTER_URI=http://${WORKSTATION_IP}:11311
 # export ROS_HOSTNAME=$(hostname) # Use if the hostname is resolvable on the network
 [ "${ROS_HOSTNAME}" == "localhost" ] && unset ROS_HOSTNAME # Use if the hostname is not resolvable on the network
-machine_ip=(`hostname -I`)
-export ROS_IP=${machine_ip[1]} # Use if the hostname can not be resolved on the network
+machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
+export ROS_IP=${machine_ip[0]} # Use if the hostname can not be resolved on the network
 echo "ROS_MASTER_URI=$ROS_MASTER_URI"
 echo "ROS_HOSTNAME=$ROS_HOSTNAME"
 echo "ROS_IP=$ROS_IP"

@@ -3,8 +3,7 @@ Bootstrap: docker
 From: osrf/ros:melodic-desktop-full
 
 %help
-    A container with ROS melodic installed. Usefull when you want to a robot that uses
-    ROS melodic while your own system has a different ROS version installed.
+    A container used for controlling the panda_franka robot using ros-melodic.
 %labels
     Maintainer: Rick Staa
     Github: https://github.com/rickstaa/COR-robotics-lab-reference
@@ -16,7 +15,7 @@ From: osrf/ros:melodic-desktop-full
 
     # Set ROS vars
     export ROS_DISTRO=melodic
-    export ROBOT_IP="192.168.131.1"
+    export ROBOT_IP="172.16.0.2"
     robot_net_base=`echo ${ROBOT_IP} | sed 's/\.[0-9]*$//'`
     machine_ip=`hostname -I | grep -oh "${robot_net_base}.[0-9]*"`
     export ROS_MASTER_URI="http://${machine_ip}:11311"
@@ -40,6 +39,46 @@ From: osrf/ros:melodic-desktop-full
         python-rosinstall-generator \
         python-wstool \
         build-essential
+
+    # Install libfranka from source
+    # NOTE: Uncomment if you want to install from source
+    apt update
+    apt install -q -y \
+       cmake \
+       libpoco-dev \
+       libeigen3-dev
+    bash -c "cd / \
+       && apt remove -y \"*libfranka*\" \
+       && git clone --recursive https://github.com/frankaemika/libfranka.git \
+       && cd libfranka \
+       && mkdir build \
+       && cd build \
+       && cmake -DCMAKE_BUILD_TYPE=Release .. \
+       && cmake --build ."
+
+    # Install libfranka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    # apt install -y ros-melodic-libfranka
+
+    # Create the catkin workspace
+    mkdir -p /panda_ws/src; cd /panda_ws/src
+
+    # Install ros_franka from the repository
+    # NOTE: Uncomment if you want to install franka_ros from the repository
+    git clone --recursive https://github.com/frankaemika/franka_ros franka_ros
+    cd franka_ros; git checkout melodic-devel; cd ../..
+    rosdep install --from-paths src --ignore-src --rosdistro melodic -y --skip-keys libfranka
+    # . /opt/ros/melodic/setup.sh; catkin_make -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+    . /opt/ros/melodic/setup.sh; catkin build -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/libfranka/build
+
+    # Install ros_franka binary packages
+    # NOTE: Uncomment the code below when you want to install the binary packages
+    # apt install -y ros-melodic-franka-ros
+
+    # Install extra ROS packages
+    apt install -y \
+        ros-melodic-ros-controllers \
+        ros-melodic-moveit
 
     # Add container resources to the container
     bash -c "cd / \

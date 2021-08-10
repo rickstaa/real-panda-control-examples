@@ -4,6 +4,7 @@
     <!--Script parameters-->
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
+    <arg name="launch_rviz" default="true" />
     <!--    Wether the franka_control node should run on this pc-->
     <arg name="load_franka_control_node" default="false"/>
 
@@ -19,18 +20,13 @@
     </group>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
 
-    <!--Load the URDF, SRDF and other .yaml configuration files on the param server-->
-    <include file="$(find panda_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
-    </include>
-
-    <!--Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default)-->
+    <!--Run MoveIt-->
     <include file="$(find panda_moveit_config)/launch/move_group.launch">
         <arg name="load_gripper" value="$(arg load_gripper)" />
     </include>
 
     <!--Run Rviz-->
-    <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="rviz_config" value="$(find real_panda_control_examples)/cfg/moveit.rviz"/>
+    <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch" if="$(arg launch_rviz)">
+        <arg name="rviz_config" value="$(find panda_moveit_config)/launch/moveit.rviz"/>
     </include>
 </launch>
