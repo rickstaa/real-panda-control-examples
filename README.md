@@ -1,6 +1,8 @@
-# Real panda control examples
+# Real panda control examples (Workspace)
 
 This repository contains several examples for controlling the real panda robot. It was created as a supplement to the official [panda documentation](https://frankaemika.github.io/docs/installation_linux.html). Further it serves as a storage place for several problems I encountered while working with the panda robot (see the [discussions section](https://github.com/rickstaa/real-panda-control-examples/discussions)).
+
+This branch contains the catkin workspace that includes all the dependencies. See the [noetic-devel](https://github.com/rickstaa/real-panda-control-examples/tree/noetic-devel) branch if you only want to clone the examples.
 
 ## Clone instructions
 
