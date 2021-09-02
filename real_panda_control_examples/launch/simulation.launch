@@ -1,0 +1,10 @@
+<!--Starts the gazebo simulation-->
+<launch>
+  <arg name="transmission" default="effort" doc="The robot transmision."/>
+
+  <arg if="$(eval arg('transmission') == 'effort')" name="hardware_interface" value="hardware_interface/EffortJointInterface"/>
+  <arg unless="$(eval arg('transmission') == 'effort')" name="hardware_interface" value="hardware_interface/PositionJointInterface"/>
+  <include file="$(find franka_gazebo)/launch/panda.launch">
+    <arg name="transmission" value="$(arg hardware_interface)"/>
+  </include>
+</launch>

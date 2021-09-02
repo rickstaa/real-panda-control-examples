@@ -1,0 +1,25 @@
+<!-- Script to test the robot control -->
+<launch>
+    <!-- Script parameters -->
+    <arg name="launch_rviz" default="true" />
+    <arg name="transmission" default="position"/> <!-- The harware interface the trajectory controller should control -->
+
+    <!-- If needed, broadcast static tf for robot root -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
+
+    <!-- Load the controllers and trajectory GUI -->
+    <group ns="panda">
+        <!-- Load joint controller configurations from YAML file to parameter server -->
+        <rosparam file="$(find real_panda_control_examples)/config/gazebo_controllers.yaml" command="load"/>
+
+        <!-- Load the controllers and traj gui -->
+        <node if="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
+        <node unless="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="effort_joint_trajectory_controller"/>
+        <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen" />
+    </group>
+
+    <!--Run Rviz-->
+    <include ns="panda" file="$(find panda_moveit_config)/launch/moveit_rviz.launch" if="$(arg launch_rviz)">
+        <arg name="rviz_config" value="$(find real_panda_control_examples)/config/traj_control.rviz"/>
+    </include>
+</launch>

@@ -1,19 +1,20 @@
-<!--Script to test the robot control-->
+<!-- Script to test the robot control-->
 <launch>
     <!--Script parameters-->
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
     <arg name="launch_rviz" default="true" />
+    <arg name="launch_reconfig_server" default="true" />
+    <arg name="launch_reconfig_gui" default="true" />
     <arg name="launch_franka_control" default="false"/> <!--Wether the franka_control node should run on this pc-->
-    <arg name="transmission" default="position"/> <!--The harware interface the trajectory controller should control-->
 
     <!--Overload robot description-->
     <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper)" />
 
     <!--If needed, broadcast static tf for robot root-->
-    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
 
-    <!--Load franka control node-->
+    <!--Load franka controllers and trajectory control GUI-->
     <group if="$(arg launch_franka_control)">
         <include file="$(find franka_control)/launch/franka_control.launch">
             <arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -24,10 +25,21 @@
     <!--Load joint controller configurations from YAML file to parameter server-->
     <rosparam file="$(find real_panda_control_examples)/config/ros_controllers.yaml" command="load"/>
 
-    <!--Load the controllers and traj gui-->
-    <node if="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
-    <node unless="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="effort_joint_trajectory_controller"/>
-    <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen"/>
+    <!--Load the controller-->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+        panda_arm_joint1_effort_controller
+        panda_arm_joint2_effort_controller
+        panda_arm_joint3_effort_controller
+        panda_arm_joint4_effort_controller
+        panda_arm_joint5_effort_controller
+        panda_arm_joint6_effort_controller
+        panda_arm_joint7_effort_controller"/>
+
+    <!--Load dyanmic reconfigure server-->
+    <node if="$(arg launch_reconfig_server)" name="effort_reconfig_server" pkg="real_panda_control_examples" type="joint_effort_dynamic_reconfigure_server.py" respawn="false" output="screen"/>
+
+    <!--Load dynamic reconfigure GUI-->
+    <node if="$(arg launch_reconfig_gui)" name="dyn_reconfig_rqt_gui" pkg="rqt_gui" type="rqt_gui" args="-s reconfigure"/>
 
     <!--Run Rviz-->
     <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch" if="$(arg launch_rviz)">
