@@ -1,5 +1,6 @@
-<!--Starts the gazebo simulation-->
+<!-- Starts the gazebo simulation -->
 <launch>
+  <!-- The harware interface the trajectory controller should control -->
   <arg name="transmission" default="effort" doc="The robot transmision."/>
 
   <arg if="$(eval arg('transmission') == 'effort')" name="hardware_interface" value="hardware_interface/EffortJointInterface"/>

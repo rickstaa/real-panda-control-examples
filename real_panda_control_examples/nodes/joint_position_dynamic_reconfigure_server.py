@@ -17,34 +17,28 @@ class JointPositionDynamicReconfigureServer:
 
         # Create joint position publishers
         self.arm_joint1_pub = rospy.Publisher(
-            "/panda_arm_joint1_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint1_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint2_pub = rospy.Publisher(
-            "/panda_arm_joint2_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint2_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint3_pub = rospy.Publisher(
-            "/panda_arm_joint3_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint3_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint4_pub = rospy.Publisher(
-            "/panda_arm_joint4_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint4_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint5_pub = rospy.Publisher(
-            "/panda_arm_joint5_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint5_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint6_pub = rospy.Publisher(
-            "/panda_arm_joint6_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint6_position_controller/command", Float64, queue_size=10
         )
         self.arm_joint7_pub = rospy.Publisher(
-            "/panda_arm_joint7_position_controller/command", Float64, queue_size=10
-        )
-        self.hand_finger_joint1_pub = rospy.Publisher(
-            "/panda_hand_finger1_position_controller/command", Float64, queue_size=10
-        )
-        self.hand_finger_joint2_pub = rospy.Publisher(
-            "/panda_hand_finger2_position_controller/command", Float64, queue_size=10
+            "panda_arm_joint7_position_controller/command", Float64, queue_size=10
         )
         self.gripper_move_client = actionlib.SimpleActionClient(
-            "/franka_gripper/move", MoveAction
+            "franka_gripper/move", MoveAction
         )
         self.gripper_move_client.wait_for_server()
         self.arm_pubs = [
@@ -80,10 +74,8 @@ class JointPositionDynamicReconfigureServer:
 
         # Set initial joint states
         if level == -1:
-            joint_states = rospy.wait_for_message("/joint_states", JointState)
-            position_dict = dict(
-                zip(joint_states.name, joint_states.position)
-            )
+            joint_states = rospy.wait_for_message("joint_states", JointState)
+            position_dict = dict(zip(joint_states.name, joint_states.position))
             set_values = list(position_dict.values())[:-2]
             set_values.append(list(position_dict.values())[-1] * 2)
             config.update(

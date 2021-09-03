@@ -6,13 +6,14 @@
     <arg name="launch_rviz" default="true" />
     <arg name="launch_reconfig_server" default="true" />
     <arg name="launch_reconfig_gui" default="true" />
+    <arg name="launch_simulation" default="true"/>
     <!-- Whether the franka_control node should run on this pc -->
     <arg name="launch_franka_control" default="false"/>
 
-    <!-- Overload robot description
-        NOTE: Usefull when we want to use a modified robot_description while the control is running on a seperate workstation.
-    -->
-    <param unless="$(arg launch_franka_control)" name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper)" />
+    <!-- Load simulation -->
+    <include if="$(arg launch_simulation)" file="$(find real_panda_control_examples)/launch/simulation.launch">
+        <arg name="transmission" value="effort"/>
+    </include>
 
     <!-- If needed, broadcast static tf for robot root -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
@@ -25,11 +26,13 @@
         </include>
     </group>
 
-    <!-- Load joint controller configurations from YAML file to parameter server -->
-    <rosparam file="$(find real_panda_control_examples)/config/ros_controllers.yaml" command="load"/>
+    <!-- Load the controllers -->
+    <group ns="panda">
+        <!-- Load joint controller configurations from YAML file to parameter server -->
+        <rosparam file="$(find real_panda_control_examples)/config/ros_gazebo_controllers.yaml" command="load"/>
 
-    <!-- Load the controller -->
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+        <!-- Load the controller -->
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
         panda_arm_joint1_effort_controller
         panda_arm_joint2_effort_controller
         panda_arm_joint3_effort_controller
@@ -37,15 +40,18 @@
         panda_arm_joint5_effort_controller
         panda_arm_joint6_effort_controller
         panda_arm_joint7_effort_controller"/>
+        <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+        panda_arm_effort_controller"/> -->
 
-    <!-- Load dyanmic reconfigure server -->
-    <node if="$(arg launch_reconfig_server)" name="effort_reconfig_server" pkg="real_panda_control_examples" type="joint_effort_dynamic_reconfigure_server.py" respawn="false" output="screen"/>
+        <!-- Load dynamic reconfigure server -->
+        <node if="$(arg launch_reconfig_server)" name="effort_reconfig_server" pkg="real_panda_control_examples" type="joint_effort_dynamic_reconfigure_server.py" respawn="false" output="screen"/>
 
-    <!-- Load dynamic reconfigure GUI -->
-    <node if="$(arg launch_reconfig_gui)" name="dyn_reconfig_rqt_gui" pkg="rqt_gui" type="rqt_gui" args="-s reconfigure"/>
+        <!-- Load dynamic reconfigure GUI -->
+        <node if="$(arg launch_reconfig_gui)" name="dyn_reconfig_rqt_gui" pkg="rqt_gui" type="rqt_gui" args="-s reconfigure"/>
+    </group>
 
     <!-- Run Rviz -->
-    <include if="$(arg launch_rviz)" file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
+    <include ns="panda" if="$(arg launch_rviz)" file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
         <arg name="rviz_config" value="$(find real_panda_control_examples)/config/traj_control.rviz"/>
     </include>
 </launch>
