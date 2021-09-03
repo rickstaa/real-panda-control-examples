@@ -1,15 +1,16 @@
-<!-- Script to test the robot control-->
+<!-- Script to test the robot control -->
 <launch>
-    <!--Script parameters-->
+    <!-- Script parameters -->
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
     <arg name="launch_rviz" default="true" />
-    <arg name="launch_franka_control" default="false"/> <!-- Wether the franka_control node should run on this pc-->
+    <!-- Whether the franka_control node should run on this pc -->
+    <arg name="launch_franka_control" default="false"/>
 
-    <!--If needed, broadcast static tf for robot root-->
+    <!-- If needed, broadcast static tf for robot root -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />
 
-    <!--Load franka controller-->
+    <!-- Load franka controller -->
     <group if="$(arg launch_franka_control)">
         <include file="$(find franka_control)/launch/franka_control.launch">
             <arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -18,13 +19,13 @@
     </group>
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
 
-    <!--Run MoveIt-->
+    <!-- Run MoveIt -->
     <include file="$(find panda_moveit_config)/launch/move_group.launch">
         <arg name="load_gripper" value="$(arg load_gripper)" />
     </include>
 
-    <!--Run Rviz-->
-    <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch" if="$(arg launch_rviz)">
+    <!-- Run Rviz -->
+    <include if="$(arg launch_rviz)" file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
         <arg name="rviz_config" value="$(find panda_moveit_config)/launch/moveit.rviz"/>
     </include>
 </launch>

@@ -14,10 +14,10 @@ import numpy as np
 from sensor_msgs.msg import JointState
 
 # Control settings
-CONTROL_TYPE = "effort"  # NOTE: Options are "effort" and "position"
+CONTROL_TYPE = "position"  # NOTE: Options are "effort" and "position"
 ACTION_PUB_FREQ = 1000
-ACTION_MAGNITUDE = 2.0
-ACTION_FREQ = 0.5
+ACTION_MAGNITUDE = 0.5
+ACTION_FREQ = 0.25
 
 # Disturbance settings
 DIST_TYPE = None  # NOTE: Options are "impulse", "constant_impulse" and "random"
@@ -89,7 +89,7 @@ if __name__ == "__main__":
         d_action = action + d
 
         # Send control command + disturbance
-        publishers[0].publish(init_joint_states["panda_joint1"] + d_action[0])
+        publishers[6].publish(init_joint_states["panda_joint7"] + d_action[0])
 
         # Force publishing rate
         time.sleep(1 / ACTION_PUB_FREQ)

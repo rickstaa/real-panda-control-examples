@@ -1,19 +1,23 @@
-<!--Script to test the robot control-->
+<!-- Script to test the robot control -->
 <launch>
-    <!--Script parameters-->
+    <!-- Script parameters -->
     <arg name="load_gripper" default="true"/>
     <arg name="robot_ip" default="172.16.0.2"/>
     <arg name="launch_rviz" default="true" />
-    <arg name="launch_franka_control" default="false"/> <!--Wether the franka_control node should run on this pc-->
-    <arg name="transmission" default="position"/> <!--The harware interface the trajectory controller should control-->
+    <!-- Whether the franka_control node should run on this pc -->
+    <arg name="launch_franka_control" default="false"/>
+    <!-- The harware interface the trajectory controller should control -->
+    <arg name="transmission" default="position"/>
 
-    <!--Overload robot description-->
-    <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper)" />
+    <!-- Overload robot description
+        NOTE: Usefull when we want to use a modified robot_description while the control is running on a seperate workstation.
+    -->
+    <param unless="$(arg launch_franka_control)" name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper)" />
 
-    <!--If needed, broadcast static tf for robot root-->
+    <!-- If needed, broadcast static tf for robot root -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0"/>
 
-    <!--Load franka control node-->
+    <!-- Load franka control node -->
     <group if="$(arg launch_franka_control)">
         <include file="$(find franka_control)/launch/franka_control.launch">
             <arg name="robot_ip" value="$(arg robot_ip)"/>
@@ -21,16 +25,17 @@
         </include>
     </group>
 
-    <!--Load joint controller configurations from YAML file to parameter server-->
+    <!-- Load joint controller configurations from YAML file to parameter server -->
     <rosparam file="$(find real_panda_control_examples)/config/ros_controllers.yaml" command="load"/>
 
-    <!--Load the controllers and traj gui-->
+    <!-- Load the controllers and traj gui -->
     <node if="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
+    # NOTE: Effort does not work yet since no gains were set
     <node unless="$(eval arg('transmission') == 'position')" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="effort_joint_trajectory_controller"/>
     <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen"/>
 
-    <!--Run Rviz-->
-    <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch" if="$(arg launch_rviz)">
+    <!-- Run Rviz -->
+    <include if="$(arg launch_rviz)" file="$(find panda_moveit_config)/launch/moveit_rviz.launch">
         <arg name="rviz_config" value="$(find real_panda_control_examples)/config/traj_control.rviz"/>
     </include>
 </launch>

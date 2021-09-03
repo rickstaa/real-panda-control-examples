@@ -17,34 +17,28 @@ class JointEffortDynamicReconfigureServer:
 
         # Create joint effort publishers
         self.arm_joint1_pub = rospy.Publisher(
-            "/panda_arm_joint1_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint1_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint2_pub = rospy.Publisher(
-            "/panda_arm_joint2_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint2_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint3_pub = rospy.Publisher(
-            "/panda_arm_joint3_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint3_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint4_pub = rospy.Publisher(
-            "/panda_arm_joint4_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint4_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint5_pub = rospy.Publisher(
-            "/panda_arm_joint5_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint5_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint6_pub = rospy.Publisher(
-            "/panda_arm_joint6_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint6_effort_controller/command", Float64, queue_size=10
         )
         self.arm_joint7_pub = rospy.Publisher(
-            "/panda_arm_joint7_effort_controller/command", Float64, queue_size=10
-        )
-        self.hand_finger_joint1_pub = rospy.Publisher(
-            "/panda_hand_finger1_effort_controller/command", Float64, queue_size=10
-        )
-        self.hand_finger_joint2_pub = rospy.Publisher(
-            "/panda_hand_finger2_effort_controller/command", Float64, queue_size=10
+            "panda_arm_joint7_effort_controller/command", Float64, queue_size=10
         )
         self.gripper_move_client = actionlib.SimpleActionClient(
-            "/franka_gripper/move", MoveAction
+            "franka_gripper/move", MoveAction
         )
         self.gripper_move_client.wait_for_server()
         self.arm_pubs = [
@@ -80,13 +74,9 @@ class JointEffortDynamicReconfigureServer:
 
         # Set initial joint states
         if level == -1:
-            joint_states = rospy.wait_for_message("/joint_states", JointState)
-            position_dict = dict(
-                zip(joint_states.name, joint_states.position)
-            )
-            effort_dict = dict(
-                zip(joint_states.name, joint_states.effort)
-            )
+            joint_states = rospy.wait_for_message("joint_states", JointState)
+            position_dict = dict(zip(joint_states.name, joint_states.position))
+            effort_dict = dict(zip(joint_states.name, joint_states.effort))
             set_values = list(effort_dict.values())[:-2]
             set_values.append(list(position_dict.values())[-1] * 2)
             config.update(
@@ -108,9 +98,7 @@ class JointEffortDynamicReconfigureServer:
 
 
 if __name__ == "__main__":
-    rospy.init_node(
-        "joint_effort_reconfig_server", anonymous=False
-    )
+    rospy.init_node("joint_effort_reconfig_server", anonymous=False)
 
     effort_dyn_server = JointEffortDynamicReconfigureServer()
 
