@@ -5,7 +5,7 @@ export WORKSTATION_IP="172.16.0.1"
 export ROS_MASTER_URI=http://${WORKSTATION_IP}:11311
 # export ROS_HOSTNAME=$(hostname) # Use if the hostname is resolvable on the network
 [ "${ROS_HOSTNAME}" == "localhost" ] && unset ROS_HOSTNAME # Use if the hostname is not resolvable on the network
-machine_ip=(`hostname -I | grep ${ROBOT_IP%.*}`)
+machine_ip=(`hostname -I | grep -Eoh ${ROBOT_IP%.*}.*`)
 export ROS_IP=${machine_ip[0]} # Use if the hostname can not be resolved on the network
 echo "ROS_MASTER_URI=$ROS_MASTER_URI"
 echo "ROS_HOSTNAME=$ROS_HOSTNAME"

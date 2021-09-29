@@ -1,0 +1,26 @@
+## Container parameters ##
+CONT_SITE='https://github.com/rickstaa/real-panda-control-examples'
+
+## Welcome message ##
+export TERM=xterm-256color
+echo -e "\e[1;31m"
+# FONT=ANSI Shadow
+cat<<TF
+██████╗ ██████╗  ██████╗███████╗
+██╔══██╗██╔══██╗██╔════╝██╔════╝
+██████╔╝██████╔╝██║     █████╗
+██╔══██╗██╔═══╝ ██║     ██╔══╝
+██║  ██║██║     ╚██████╗███████╗
+╚═╝  ╚═╝╚═╝      ╚═════╝╚══════╝
+TF
+echo -e "\e[0;37m"
+# FONT=Calvin S
+cat<<TF
+╦═╗╔═╗╔═╗  ┌┬┐┌─┐┬  ┌─┐┌┬┐┬┌─┐
+╠╦╝║ ║╚═╗  │││├┤ │  │ │ ││││
+╩╚═╚═╝╚═╝  ┴ ┴└─┘┴─┘└─┘─┴┘┴└─┘
+TF
+echo -e "\e[0;33m"
+echo "Welcome to the rpce:ros_melodic HPC singularity container."
+echo "For more information about this container see ($CONT_SITE)."
+echo -e "\e[m"
