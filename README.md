@@ -57,3 +57,7 @@ Additionally the `real_panda_control_examples` contains a slightly modified vers
 ```bash
 roslaunch real_panda_control_examples real_panda_traj_control.launch
 ```
+
+## Contributing
+
+Feel free to open an issue if you have ideas on how to make this GitHub action better or if you want to report a bug! All contributions are welcome. :rocket: Please consult the [contribution guidelines](CONTRIBUTING.md) for more information.
